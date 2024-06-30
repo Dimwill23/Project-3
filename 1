@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виджет Восходов и Закатов для Новосибирска</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .sun-widget {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .sun-widget h2 {
+            margin-top: 0;
+        }
+        .sun-time {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sun-widget" id="sun-widget">
+    <h2>Новосибирск</h2>
+    <div class="sun-time" id="sunrise">Восход: Загрузка...</div>
+    <div class="sun-time" id="sunset">Закат: Загрузка...</div>
+</div>
+
+<script>
+    async function fetchSunTimes() {
+        const apiKey = 'YOUR_GOOGLE_API_KEY';
+        const city = 'Новосибирск';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ru`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const { sunrise, sunset } = data.sys;
+
+            const sunriseTime = new Date(sunrise * 1000).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            const sunsetTime = new Date(sunset * 1000).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('sunrise').innerText = `Восход: ${sunriseTime}`;
+            document.getElementById('sunset').innerText = `Закат: ${sunsetTime}`;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+        }
+    }
+
+    fetchSunTimes();
+</script>
+
+</body>
+</html>
